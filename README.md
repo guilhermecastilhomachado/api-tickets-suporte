@@ -38,6 +38,9 @@ src/main/java/br/ufu/apiticketssuporte
 - Testes dos endpoints via Swagger
 - Cadastro de comentários por chamado
 - Listagem de comentários por chamado
+- Tratamento global de exeções
+- Resposta padronizada para erros da API
+- Validações de campos com mensagens organizadas
 
 ## Endpoints disponíveis
 - POST /chamados
@@ -59,6 +62,31 @@ src/main/java/br/ufu/apiticketssuporte
   "prioridade": "ALTA"
 }
 ```
+
+## Tratamento de erros
+A API possui tratamento global de exeções para melhorar a organização das respostas em cenários de falha.
+
+### Casos tratados
+- Recurso nao encontrado (404 Not Found)
+- Erro de validação (400 Bad Request)
+- Erro interno do servidor (500 Internal Server Error)
+
+
+### Exemplo de erro de validação
+```json
+{
+  "dataHora": "2023-10-14T20:12:10",
+  "status": 400,
+  "error": "Erro de validação",
+  "message": "Um ou mais campos estao invalidos",
+  "caminho": "/chamados",
+  "campos": {
+    "titulo": "O titulo e obrigatorio."
+  }
+}
+```
+
+
 ## Como executar o projeto
 1. Clone o repositório
 ```git clone
@@ -118,7 +146,5 @@ Aprendizados desenvolvidos
 - Versionamento com Git e GitHub
 
 Melhorias futuras
-- Tratamento global de exceções
-- Validações mais refinadas
 - Testes automatizados
 - Separação de configurações por ambiente
