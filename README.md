@@ -36,6 +36,8 @@ src/main/java/br/ufu/apiticketssuporte
 - Filtro por status
 - Integração com PostgreSQL
 - Testes dos endpoints via Swagger
+- Cadastro de comentários por chamado
+- Listagem de comentários por chamado
 
 ## Endpoints disponíveis
 - POST /chamados
@@ -44,6 +46,8 @@ src/main/java/br/ufu/apiticketssuporte
 - PUT /chamados/{id}
 - PATCH /chamados/{id}/status?status=FINALIZADO
 - GET /chamados/status/{status}
+- POST /chamados/{chamadoId}/comentarios
+- GET /chamados/{chamadoId}/comentarios
 
 ## Exemplo de requisição para cadastro
 ```json
@@ -114,7 +118,6 @@ Aprendizados desenvolvidos
 - Versionamento com Git e GitHub
 
 Melhorias futuras
-- Implementação de comentários por chamado
 - Tratamento global de exceções
 - Validações mais refinadas
 - Testes automatizados
