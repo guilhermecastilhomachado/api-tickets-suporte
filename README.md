@@ -16,6 +16,10 @@ O projeto foi construído com foco em organização em camadas, persistência de
 - Maven
 - Lombok
 - Swagger / OpenAPI
+- H2 Database (testes)
+- JUnit 5
+- Mockito
+- MockMvc
 
 ## Estrutura do projeto
 ```text
@@ -41,6 +45,9 @@ src/main/java/br/ufu/apiticketssuporte
 - Tratamento global de exeções
 - Resposta padronizada para erros da API
 - Validações de campos com mensagens organizadas
+- Testes automatizados unitários
+- Teste de integração dos endpoints
+- Separação de configurações por ambiente (dev, test e prod)
 
 ## Endpoints disponíveis
 - POST /chamados
@@ -86,6 +93,32 @@ A API possui tratamento global de exeções para melhorar a organização das re
 }
 ```
 
+## Perfis de configuração
+O projeto utiliza perfis para separar as configurações conforme o ambiente de execução:
+
+- `dev`: ambiente local com PostgreSQL via Docker
+- `test`: ambiente de testes automatizados com banco H2 em memória
+- `prod`: ambiente preparado para uso com variáveis de ambiente
+
+O perfil padrão do projeto é `dev`.
+
+## Testes automatizados
+O projeto possui testes automatizados para validar regras de negócio e comportamento dos endpoints.
+
+### Tipos de testes implementados
+- Teste unitários dos serviços
+- Teste de integração com MockMvc
+- Validação de erros de entrada da API
+
+### Como executar os testes
+No terminal:
+```bash
+mvnw.cmd test
+```
+Ou
+```bash
+.\mvnw.cmd test
+```
 
 ## Como executar o projeto
 1. Clone o repositório
@@ -144,7 +177,3 @@ Aprendizados desenvolvidos
 - Uso de Docker para infraestrutura local
 - Teste de endpoints com Swagger
 - Versionamento com Git e GitHub
-
-Melhorias futuras
-- Testes automatizados
-- Separação de configurações por ambiente
