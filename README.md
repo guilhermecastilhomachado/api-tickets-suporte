@@ -23,9 +23,6 @@ API REST para abertura e acompanhamento de chamados de suporte, com foco em orga
 - [Como executar (dev)](#como-executar-dev)
 - [Como executar os testes](#como-executar-os-testes)
 - [Tratamento de erros](#tratamento-de-erros)
-- [Roadmap](#roadmap)
-- [Screenshots](#screenshots)
-- [Licenca](#licenca)
 
 ---
 
