@@ -1,25 +1,66 @@
 # API de Tickets de Suporte
 
-## Objetivo
-Projeto de portfólio acadêmico desenvolvido para praticar conceitos de desenvolvimento back-end com **Java**, **Spring Boot**, **PostgreSQL** e **Docker**, simulando um sistema de abertura e acompanhamento de chamados de suporte.
+[![Java](https://img.shields.io/badge/Java-17-007396?logo=java&logoColor=white)](https://adoptium.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Build](https://img.shields.io/badge/build-maven-2C3E50)](https://maven.apache.org/)
+[![Tests](https://img.shields.io/badge/tests-JUnit%205-25A162?logo=junit5&logoColor=white)](https://junit.org/junit5/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-dev-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![H2](https://img.shields.io/badge/H2-test-1F5AA5)](https://www.h2database.com/)
 
-O projeto foi construído com foco em organização em camadas, persistência de dados, versionamento com Git e documentação para portfólio profissional.
+API REST para abertura e acompanhamento de chamados de suporte, com foco em organizacao em camadas, validacoes, tratamento global de erros e testes automatizados.
 
-## Tecnologias utilizadas
+---
+
+## Sumario
+- [Visao geral](#visao-geral)
+- [Destaques](#destaques)
+- [Tecnologias](#tecnologias)
+- [Modelagem do dominio (resumo)](#modelagem-do-dominio-resumo)
+- [Estrutura do projeto](#estrutura-do-projeto)
+- [Documentacao (Swagger)](#documentacao-swagger)
+- [Endpoints principais](#endpoints-principais)
+- [Perfis de configuracao](#perfis-de-configuracao)
+- [Como executar (dev)](#como-executar-dev)
+- [Como executar os testes](#como-executar-os-testes)
+- [Tratamento de erros](#tratamento-de-erros)
+- [Roadmap](#roadmap)
+- [Screenshots](#screenshots)
+- [Licenca](#licenca)
+
+---
+
+## Visao geral
+A API permite criar, listar, atualizar e finalizar chamados de suporte, alem de adicionar comentarios. O projeto foi pensado para uso academico e portfolio, com boas praticas de configuracao por ambiente.
+
+---
+
+## Destaques
+- CRUD completo de chamados com atualizacao de status
+- Comentarios vinculados ao chamado
+- Validacoes de entrada e respostas de erro padronizadas
+- Separacao de ambientes: `dev`, `test`, `prod`
+- Testes unitarios e de integracao com MockMvc
+- Documentacao interativa via Swagger / OpenAPI
+
+---
+
+## Tecnologias
 - Java 17
-- Spring Boot
-- Spring Web
-- Spring Data JPA
-- PostgreSQL
-- Docker
-- Docker Compose
+- Spring Boot (Web, Data JPA)
+- PostgreSQL (dev)
+- H2 Database (test)
 - Maven
-- Lombok
+- JUnit 5, Mockito, MockMvc
+- Docker / Docker Compose
 - Swagger / OpenAPI
-- H2 Database (testes)
-- JUnit 5
-- Mockito
-- MockMvc
+
+---
+
+## Modelagem do dominio (resumo)
+Relacoes principais:
+- `Chamado (1) -> (N) Comentario`
+
+---
 
 ## Estrutura do projeto
 ```text
@@ -31,35 +72,25 @@ src/main/java/br/ufu/apiticketssuporte
 ├── repositorio
 └── servico
 ```
-## Funcionalidades Implementadas
-- Cadastro de chamados
-- Listagem de chamados
-- Busca de chamado por ID
-- Atualização de chamado
-- Atualização de status
-- Filtro por status
-- Integração com PostgreSQL
-- Testes dos endpoints via Swagger
-- Cadastro de comentários por chamado
-- Listagem de comentários por chamado
-- Tratamento global de exeções
-- Resposta padronizada para erros da API
-- Validações de campos com mensagens organizadas
-- Testes automatizados unitários
-- Teste de integração dos endpoints
-- Separação de configurações por ambiente (dev, test e prod)
 
-## Endpoints disponíveis
-- POST /chamados
-- GET /chamados
-- GET /chamados/{id}
-- PUT /chamados/{id}
-- PATCH /chamados/{id}/status?status=FINALIZADO
-- GET /chamados/status/{status}
-- POST /chamados/{chamadoId}/comentarios
-- GET /chamados/{chamadoId}/comentarios
+---
 
-## Exemplo de requisição para cadastro
+## Documentacao (Swagger)
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+---
+
+## Endpoints principais
+- `POST /chamados`
+- `GET /chamados`
+- `GET /chamados/{id}`
+- `PUT /chamados/{id}`
+- `PATCH /chamados/{id}/status?status=FINALIZADO`
+- `GET /chamados/status/{status}`
+- `POST /chamados/{chamadoId}/comentarios`
+- `GET /chamados/{chamadoId}/comentarios`
+
+### Exemplo de requisicao (cadastro de chamado)
 ```json
 {
   "titulo": "Erro ao acessar o sistema",
@@ -70,21 +101,60 @@ src/main/java/br/ufu/apiticketssuporte
 }
 ```
 
+---
+
+## Perfis de configuracao
+O projeto utiliza perfis para separar configuracoes por ambiente:
+- `dev`: usa PostgreSQL (Docker)
+- `test`: usa H2 em memoria (rodando testes)
+- `prod`: preparado para variaveis de ambiente
+
+Arquivos:
+- `application.properties`: configuracoes comuns
+- `application-dev.properties`: conexao com PostgreSQL
+- `application-test.properties`: H2 em memoria
+- `application-prod.properties`: variaveis de ambiente
+
+Variaveis esperadas em `prod`:
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+
+---
+
+## Como executar (dev)
+1) Suba o banco com Docker:
+```bash
+docker compose up -d
+```
+
+2) Rode a aplicacao pela classe principal:
+- `ApiDeTicketsDeSuporteApplication`
+
+---
+
+## Como executar os testes
+### Windows (PowerShell)
+```powershell
+.\mvnw.cmd test
+```
+
+### Git Bash
+```bash
+./mvnw test
+```
+
+---
+
 ## Tratamento de erros
-A API possui tratamento global de exeções para melhorar a organização das respostas em cenários de falha.
+A API possui tratamento global de excecoes para padronizar respostas de erro.
 
-### Casos tratados
-- Recurso nao encontrado (404 Not Found)
-- Erro de validação (400 Bad Request)
-- Erro interno do servidor (500 Internal Server Error)
-
-
-### Exemplo de erro de validação
+### Exemplo de erro de validacao
 ```json
 {
   "dataHora": "2023-10-14T20:12:10",
   "status": 400,
-  "error": "Erro de validação",
+  "error": "Erro de validacao",
   "message": "Um ou mais campos estao invalidos",
   "caminho": "/chamados",
   "campos": {
@@ -93,87 +163,6 @@ A API possui tratamento global de exeções para melhorar a organização das re
 }
 ```
 
-## Perfis de configuração
-O projeto utiliza perfis para separar as configurações conforme o ambiente de execução:
+---
 
-- `dev`: ambiente local com PostgreSQL via Docker
-- `test`: ambiente de testes automatizados com banco H2 em memória
-- `prod`: ambiente preparado para uso com variáveis de ambiente
-
-O perfil padrão do projeto é `dev`.
-
-## Testes automatizados
-O projeto possui testes automatizados para validar regras de negócio e comportamento dos endpoints.
-
-### Tipos de testes implementados
-- Teste unitários dos serviços
-- Teste de integração com MockMvc
-- Validação de erros de entrada da API
-
-### Como executar os testes
-No terminal:
-```bash
-mvnw.cmd test
-```
-Ou
-```bash
-.\mvnw.cmd test
-```
-
-## Como executar o projeto
-1. Clone o repositório
-```git clone
-git clone https://github.com/guilhermecastilhomachado/api-tickets-suporte.git
-cd api-tickets-suporte
-```
-2. Subir o banco de dados com Docker
-```bash
-docker compose up -d
-```
-3. Verificar se o container está em execução
-```bash
-docker compose ps
-```
-4. Configurar o arquivo application.properties
-
-Utilizar a conexão local com o PostgreSQL do container Docker:
-```properties
-spring.application.name=api_tickets_suporte
-
-spring.datasource.url=jdbc:postgresql://localhost:5433/api_tickets_suporte
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-
-springdoc.swagger-ui.path=/swagger-ui.html
-```
-5. Executar a aplicação
-
-Rodar a classe principal: "ApiDeTicketsDeSuporteApplication"
-
-## Como testar a API
-
-Com a aplicação em execução, acessar:
-
-http://localhost:8080/chamados
-
-http://localhost:8080/swagger-ui.html
-
-Caso o primeiro link retorne [], a API está funcionando corretamente.
-
-Testes realizados
-- Cadastro de chamado via Swagger
-- Listagem de chamados
-- Busca por ID
-- Atualização de status para FINALIZADO
-
-Aprendizados desenvolvidos
-- Construção de API REST com Spring Boot
-- Persistência de dados com JPA e PostgreSQL
-- Organização em camadas
-- Uso de Docker para infraestrutura local
-- Teste de endpoints com Swagger
-- Versionamento com Git e GitHub
+Projeto desenvolvido para fins acadêmicos/portfólio.
